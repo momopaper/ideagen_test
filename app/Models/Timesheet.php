@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,7 +38,9 @@ class Timesheet extends Model
      *
      * @var array
      */
-    protected $casts = [];
+    protected $casts = [
+        'is_approved' => 'boolean'
+    ];
 
     /**
      * Get user record associated with the post.
@@ -56,7 +59,7 @@ class Timesheet extends Model
      */
     public function workingHours()
     {
-        return $this->time_out - $this->time_in;
+        return abs(Carbon::parse($this->attributes['time_out'])->diffInMinutes(Carbon::parse($this->attributes['time_in'])) / 60);
     }
 
     /**
@@ -67,5 +70,26 @@ class Timesheet extends Model
     public function setApprovalStatus(bool $status)
     {
         $this->attributes['is_approved'] = $status;
+        $this->attributes['approved_at'] = new \DateTime();
+    }
+
+    /**
+     * Get the formatted time_in.
+     *
+     * @return string
+     */
+    public function getFormattedTimeInAttribute()
+    {
+        return Carbon::parse($this->attributes['time_in'])->format('g:i A');
+    }
+
+    /**
+     * Get the formatted time_out.
+     *
+     * @return string
+     */
+    public function getFormattedTimeOutAttribute()
+    {
+        return Carbon::parse($this->attributes['time_out'])->format('g:i A');
     }
 }
