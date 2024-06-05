@@ -18,10 +18,10 @@ class UpdateTimesheet extends BaseService
     public function rules()
     {
         return [
-            'timesheet_id' => 'required|integer|exists:timesheets,id',
+            'id' => 'required|integer|exists:timesheets,id',
             'date' => 'required|date|date_format:Y-m-d',
-            'time_in' => 'required|date|date_format:Hi',
-            'time_out' => 'required|date|date_format:Hi|after:time_in',
+            'time_in' => 'required|date_format:H:i:s',
+            'time_out' => 'required|date_format:H:i:s|after:time_in',
             'task_information' => 'required|string',
         ];
     }
@@ -30,16 +30,16 @@ class UpdateTimesheet extends BaseService
      * Update a Timesheet.
      *
      * @param array $data
-     * @return boolean
+     * @return mixed
      */
-    public function execute(array $data): bool
+    public function execute(array $data)
     {
         try {
-            $this->validate($data);
+            $validated_result = $this->validate($data);
+            if ($validated_result !== true) return $validated_result;
 
-            $timesheet = Timesheet::where('id', $data['timesheet_id'])->first();
+            $timesheet = Timesheet::where('id', $data['id'])->first();
 
-            DB::beginTransaction();
             $timesheet->update([
                 'date' => $data['date'],
                 'time_in' => $data['time_in'],
@@ -48,12 +48,10 @@ class UpdateTimesheet extends BaseService
                 'is_approved' => false,
                 'approved_at' => null
             ]);
-            DB::commit();
 
             return true;
         } catch (Exception $ex) {
             $this->log('error', $ex->getMessage() . PHP_EOL . PHP_EOL . $ex->getTraceAsString());
-            DB::rollBack();
             return false;
         }
     }

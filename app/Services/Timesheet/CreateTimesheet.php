@@ -5,7 +5,6 @@ namespace App\Services\Timesheet;
 use App\Services\BaseService;
 use App\Models\Timesheet;
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 class CreateTimesheet extends BaseService
 {
@@ -19,8 +18,8 @@ class CreateTimesheet extends BaseService
     {
         return [
             'date' => 'required|date|date_format:Y-m-d',
-            'time_in' => 'required|date|date_format:Hi',
-            'time_out' => 'required|date|date_format:Hi|after:time_in',
+            'time_in' => 'required|date_format:H:i:s',
+            'time_out' => 'required|date_format:H:i:s|after:time_in',
             'task_information' => 'required|string',
             'user_id' => 'required|integer|exists:users,id',
         ];
@@ -30,13 +29,14 @@ class CreateTimesheet extends BaseService
      * Create a Timesheet.
      *
      * @param array $data
-     * @return Timesheet
+     * @return mixed
      */
-    public function execute(array $data): Timesheet
+    public function execute(array $data)
     {
         try {
-            $this->validate($data);
-            DB::beginTransaction();
+            $validated_result = $this->validate($data);
+            if ($validated_result !== true) return $validated_result;
+
             $timesheet = Timesheet::create([
                 'date' => $data['date'],
                 'time_in' => $data['time_in'],
@@ -46,12 +46,10 @@ class CreateTimesheet extends BaseService
                 'approved_at' => null,
                 'user_id' => $data['user_id']
             ]);
-            DB::commit();
 
             return $timesheet;
         } catch (Exception $ex) {
             $this->log('error', $ex->getMessage() . PHP_EOL . PHP_EOL . $ex->getTraceAsString());
-            DB::rollBack();
             return false;
         }
     }

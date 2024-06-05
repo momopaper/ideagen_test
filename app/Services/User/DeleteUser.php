@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Timesheet;
+namespace App\Services\User;
 
 use App\Services\BaseService;
-use App\Models\Timesheet;
+use App\Models\User;
 use Exception;
 
-class DeleteTimesheet extends BaseService
+class DeleteUser extends BaseService
 {
     /**
      * validation rules.
@@ -16,12 +16,12 @@ class DeleteTimesheet extends BaseService
     public function rules()
     {
         return [
-            'id' => 'required|integer|exists:timesheets,id',
+            'id' => 'required|integer|exists:users,id',
         ];
     }
 
     /**
-     * Update a Timesheet.
+     * Update a User.
      *
      * @param array $data
      * @return mixed
@@ -32,9 +32,9 @@ class DeleteTimesheet extends BaseService
             $validated_result = $this->validate($data);
             if ($validated_result !== true) return $validated_result;
 
-            $timesheet = Timesheet::where('id', $data['id'])->first();
+            $user = User::where('id', $data['id'])->first();
 
-            $timesheet->delete();
+            $user->delete();
 
             return true;
         } catch (Exception $ex) {

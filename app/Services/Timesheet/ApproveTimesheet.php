@@ -6,7 +6,7 @@ use App\Services\BaseService;
 use App\Models\Timesheet;
 use Exception;
 
-class DeleteTimesheet extends BaseService
+class ApproveTimesheet extends BaseService
 {
     /**
      * validation rules.
@@ -16,7 +16,7 @@ class DeleteTimesheet extends BaseService
     public function rules()
     {
         return [
-            'id' => 'required|integer|exists:timesheets,id',
+            'id' => 'required|integer|exists:timesheets,id'
         ];
     }
 
@@ -34,7 +34,10 @@ class DeleteTimesheet extends BaseService
 
             $timesheet = Timesheet::where('id', $data['id'])->first();
 
-            $timesheet->delete();
+            if (!$timesheet->is_approved) {
+                $timesheet->setApprovalStatus(true);
+                $timesheet->update();
+            }
 
             return true;
         } catch (Exception $ex) {
