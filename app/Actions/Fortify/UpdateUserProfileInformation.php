@@ -17,11 +17,16 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
+        $id = $input['id'];
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->where(function ($query) use ($id) {
+                $query->whereNull('deleted_at')->where('id', '!=', $id);
+            }),],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-            'ic' => ['required', 'string', 'max:255', Rule::unique('users')->whereNull('deleted_at')],
+            'ic' => ['required', 'string', 'max:255', Rule::unique('users')->where(function ($query) use ($id) {
+                $query->whereNull('deleted_at')->where('id', '!=', $id);
+            }),],
             'epf_no' => ['required', 'string', 'max:255'],
             'socso_no' => ['required', 'string', 'max:255'],
             'employee_no' => ['required', 'string', 'max:255'],
@@ -40,6 +45,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
+                'ic' => $input['ic'],
+                'epf_no' => $input['epf_no'],
+                'socso_no' => $input['socso_no'],
+                'employee_no' => $input['employee_no']
             ])->save();
         }
     }

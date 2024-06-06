@@ -3,10 +3,7 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
-use App\Http\Middleware\AdminAccess;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Laravel\Jetstream\Http\Controllers\Livewire\UserProfileController;
 use Livewire\Livewire;
 
 Route::get('/', function () {
@@ -22,10 +19,10 @@ Route::post('login', [LoginController::class, 'login']);
 
 Route::middleware([
     // 'auth:sanctum',
-    // config('jetstream.auth_session'),
-    // 'verified',
+    config('jetstream.auth_session'),
+    'verified',
     'auth',
-    'auth.session'
+    // 'auth.session'
 ])->group(function () {
     Route::name('timesheet.')->group(function () {
         Route::get('/timesheet', [TimesheetController::class, 'index'])->name('index');
@@ -48,9 +45,7 @@ Route::middleware([
         });
     });
 
-    Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-    Route::post('logoutFromOtherBrowser', [LoginController::class, 'logoutFromOtherBrowser'])->name('logout_other_browser');
 });
 
 /**

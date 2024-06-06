@@ -28,6 +28,14 @@ class UpdateUser extends BaseService
                     $query->whereNull('deleted_at')->where('id', '!=', $id);
                 }),
             ],
+            'ic' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users')->where(function ($query) use ($id) {
+                    $query->whereNull('deleted_at')->where('id', '!=', $id);
+                }),
+            ],
             'name' => 'required|string|max:255',
             'epf_no' => 'required|string|max:255',
             'socso_no' => 'required|string|max:255',
@@ -52,6 +60,7 @@ class UpdateUser extends BaseService
             $user->update([
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'ic' => $data['ic'],
                 'epf_no' => $data['epf_no'],
                 'socso_no' => $data['socso_no'],
                 'employee_no' => $data['employee_no']

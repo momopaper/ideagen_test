@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class TimesheetController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the timesheet.
      */
     public function index(Request $request)
     {
@@ -41,7 +41,7 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new timesheet.
      */
     public function create()
     {
@@ -49,7 +49,7 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created timesheet in storage.
      */
     public function store(Request $request)
     {
@@ -66,7 +66,7 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the timesheet.
      */
     public function edit(Request $request, Timesheet $timesheet)
     {
@@ -78,7 +78,7 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update timesheet in storage.
      */
     public function update(Request $request, Timesheet $timesheet)
     {
@@ -95,7 +95,7 @@ class TimesheetController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove timesheet from storage.
      */
     public function destroy(Timesheet $timesheet)
     {

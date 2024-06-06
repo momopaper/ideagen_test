@@ -58,26 +58,26 @@
                     </div>
                 @enderror
             </div>
-
-            <div class="mb-4">
-                <label for="ic" class="block text-sm font-medium text-gray-700">Identity No.</label>
-                <input type="text" name="ic" id="ic"
-                    @if (old('ic')) value="{{ old('ic', '') }}" @endif
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    required>
-                @error('ic')
-                    <div class="mt-2 text-sm text-red-600 flex items-center">
-                        <svg class="w-5 h-5 mr-1 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-11.293a1 1 0 00-1.414 0L9 8.414l-1.293-1.293a1 1 0 00-1.414 1.414L7.586 9.828l-1.293 1.293a1 1 0 101.414 1.414L9 11.414l1.293 1.293a1 1 0 001.414-1.414L10.414 9.828l1.293-1.293a1 1 0 000-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
         @endif
+
+        <div class="mb-4">
+            <label for="ic" class="block text-sm font-medium text-gray-700">Identity No.</label>
+            <input type="text" name="ic" id="ic"
+                @if ($mode == 'edit' || old('ic')) value="{{ old('ic', $user != null ? $user->ic : '') }}" @endif
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                required>
+            @error('ic')
+                <div class="mt-2 text-sm text-red-600 flex items-center">
+                    <svg class="w-5 h-5 mr-1 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-11.293a1 1 0 00-1.414 0L9 8.414l-1.293-1.293a1 1 0 00-1.414 1.414L7.586 9.828l-1.293 1.293a1 1 0 101.414 1.414L9 11.414l1.293 1.293a1 1 0 001.414-1.414L10.414 9.828l1.293-1.293a1 1 0 000-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
 
         <div class="mb-4">
             <label for="epf_no" class="block text-sm font-medium text-gray-700">EPF No.</label>
@@ -144,7 +144,7 @@
                     <button id="role-button" type="button"
                         class="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <span id="role-text">
-                            {{ old('role', $user != null ? $user->roles->pluck('name')[0] : 'User') }}
+                            {{ old('role', $user != null ? $user->roles->pluck('name')[0] : 'user') }}
                         </span>
                         <svg class="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor">
@@ -165,7 +165,7 @@
                 </x-slot>
             </x-dropdown>
             <input id="role" type="hidden" name="role" required
-                @if ($mode == 'edit' || old('role')) value="{{ old('role', $user != null ? $user->role : 'user') }}" @endif />
+                @if ($mode == 'edit' || old('role')) value="{{ old('role', $user != null ? $user->roles->pluck('name')[0] : 'user') }}" @endif />
             @error('role')
                 <div class="mt-2 text-sm text-red-600 flex items-center">
                     <svg class="w-5 h-5 mr-1 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"

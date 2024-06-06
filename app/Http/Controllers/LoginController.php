@@ -11,6 +11,9 @@ use Illuminate\Contracts\Auth\StatefulGuard;
 
 class LoginController extends Controller
 {
+    /**
+     * Display login form.
+     */
     public function showLoginForm()
     {
         if (Auth()->user()) {
@@ -20,6 +23,9 @@ class LoginController extends Controller
         }
     }
 
+    /**
+     * Login.
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -41,6 +47,9 @@ class LoginController extends Controller
         ]);
     }
 
+    /**
+     * Logout.
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -48,41 +57,5 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
-    }
-
-    public function logoutFromOtherBrowser(Request $request)
-    {
-        if (config('session.driver') !== 'database') {
-            return;
-        }
-
-        if (!Hash::check($request->get('password'), Auth::user()->password)) {
-            throw ValidationException::withMessages([
-                'password' => [__('This password does not match our records.')],
-            ]);
-        }
-
-        $a = Auth::logoutOtherDevices($request->get('password'));
-        return true;
-
-        // $this->resetErrorBag();
-
-        // if (!Hash::check($this->password, Auth::user()->password)) {
-        //     throw ValidationException::withMessages([
-        //         'password' => [__('This password does not match our records.')],
-        //     ]);
-        // }
-
-        // $guard->logoutOtherDevices($this->password);
-
-        // $this->deleteOtherSessionRecords();
-
-        // request()->session()->put([
-        //     'password_hash_' . Auth::getDefaultDriver() => Auth::user()->getAuthPassword(),
-        // ]);
-
-        // $this->confirmingLogout = false;
-
-        // $this->dispatch('loggedOut');
     }
 }
