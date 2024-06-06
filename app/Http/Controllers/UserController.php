@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::get();
+        $users = User::with('roles')->get();
 
         return view('dashboard', ['object' => 'user', 'mode' => 'list', 'users' => $users]);
     }

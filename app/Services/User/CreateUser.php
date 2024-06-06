@@ -37,6 +37,7 @@ class CreateUser extends BaseService
             'epf_no' => 'required|string|max:255',
             'socso_no' => 'required|string|max:255',
             'employee_no' => 'required|string|max:255',
+            'role' => 'required|string',
         ];
     }
 
@@ -61,6 +62,8 @@ class CreateUser extends BaseService
                 'socso_no' => $data['socso_no'],
                 'employee_no' => $data['employee_no']
             ]);
+
+            $user->assignRole($data['role']);
 
             return $user;
         } catch (Exception $ex) {

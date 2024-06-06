@@ -73,7 +73,7 @@
 @if ($mode == 'edit' || $mode == 'view' || old('task_information'))
 {{ old('task_information', $timesheet != null ? $timesheet->task_information : '') }}
 @endif
-            </textarea>
+</textarea>
             @error('task_information')
                 <div class="mt-2 text-sm text-red-600 flex items-center">
                     <svg class="w-5 h-5 mr-1 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"

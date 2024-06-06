@@ -1,6 +1,6 @@
 @props(['mode', 'user' => null])
 
-<div class="w-1/3 mx-auto bg-white overflow-hidden shadow-xl sm:rounded-lg">
+<div class="w-1/3 mx-auto bg-white overflow-visible shadow-xl sm:rounded-lg">
     <form id="form_submission" action="{{ $mode === 'create' ? route('user.store') : route('user.update', $user) }}"
         method="POST" enctype="multipart/form-data" class="p-6">
         @csrf
@@ -136,6 +136,49 @@
             @enderror
         </div>
 
+        <div class="mb-4">
+            <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+
+            <x-dropdown align="right" width="w-full">
+                <x-slot name="trigger">
+                    <button id="role-button" type="button"
+                        class="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span id="role-text">
+                            {{ old('role', $user != null ? $user->roles->pluck('name')[0] : 'User') }}
+                        </span>
+                        <svg class="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5.293 9.707a1 1 0 011.414 0L10 13.086l3.293-3.379a1 1 0 011.414 1.414l-4 4.12a1 1 0 01-1.414 0l-4-4.12a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    <x-dropdown-link onclick="setRole('user')">
+                        user
+                    </x-dropdown-link>
+                    <x-dropdown-link onclick="setRole('admin')">
+                        admin
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+            <input id="role" type="hidden" name="role" required
+                @if ($mode == 'edit' || old('role')) value="{{ old('role', $user != null ? $user->role : 'user') }}" @endif />
+            @error('role')
+                <div class="mt-2 text-sm text-red-600 flex items-center">
+                    <svg class="w-5 h-5 mr-1 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-11.293a1 1 0 00-1.414 0L9 8.414l-1.293-1.293a1 1 0 00-1.414 1.414L7.586 9.828l-1.293 1.293a1 1 0 101.414 1.414L9 11.414l1.293 1.293a1 1 0 001.414-1.414L10.414 9.828l1.293-1.293a1 1 0 000-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
         <div class="flex justify-end space-x-4 mt-4">
             @if ($mode === 'create')
                 <button type="submit"
@@ -163,5 +206,11 @@
         if (confirm('Are you sure you want to delete this user?')) {
             document.getElementById('delete_form').submit();
         }
+    }
+
+    function setRole(role) {
+        event.preventDefault();
+        document.getElementById('role').value = role;
+        document.getElementById('role-text').innerText = role.charAt(0).toUpperCase() + role.slice(1);
     }
 </script>

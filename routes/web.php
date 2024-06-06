@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\AdminAccess;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\Livewire\UserProfileController;
@@ -36,13 +37,15 @@ Route::middleware([
         Route::post('/timesheet/{timesheet}/approve', [TimesheetController::class, 'approve'])->name('approve');
     });
 
-    Route::name('user.')->group(function () {
-        Route::get('/user', [UserController::class, 'index'])->name('index');
-        Route::get('/user/create', [UserController::class, 'create'])->name('create');
-        Route::post('/user/store', [UserController::class, 'store'])->name('store');
-        Route::get('/user/{user}', [UserController::class, 'edit'])->name('edit');
-        Route::post('/user/{user}/update', [UserController::class, 'update'])->name('update');
-        Route::post('/user/{user}/remove', [UserController::class, 'destroy'])->name('destroy');
+    Route::middleware(['admin.access'])->group(function () {
+        Route::name('user.')->group(function () {
+            Route::get('/user', [UserController::class, 'index'])->name('index');
+            Route::get('/user/create', [UserController::class, 'create'])->name('create');
+            Route::post('/user/store', [UserController::class, 'store'])->name('store');
+            Route::get('/user/{user}', [UserController::class, 'edit'])->name('edit');
+            Route::post('/user/{user}/update', [UserController::class, 'update'])->name('update');
+            Route::post('/user/{user}/remove', [UserController::class, 'destroy'])->name('destroy');
+        });
     });
 
     Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile.show');
