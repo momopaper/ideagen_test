@@ -8,11 +8,14 @@ use App\Services\Timesheet\ApproveTimesheet;
 use App\Services\Timesheet\CreateTimesheet;
 use App\Services\Timesheet\DeleteTimesheet;
 use App\Services\Timesheet\UpdateTimesheet;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TimesheetController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the timesheet.
      */
@@ -70,6 +73,7 @@ class TimesheetController extends Controller
      */
     public function edit(Request $request, Timesheet $timesheet)
     {
+        $this->authorize('edit', $timesheet);
         if ($request->user()->id == $timesheet->user->id) {
             return view('dashboard', ['object' => 'timesheet', 'mode' => "edit", 'timesheet' => $timesheet]);
         } else {
@@ -82,6 +86,7 @@ class TimesheetController extends Controller
      */
     public function update(Request $request, Timesheet $timesheet)
     {
+        $this->authorize('update', $timesheet);
         $request->request->set('id', $timesheet->id);
         $result = app(UpdateTimesheet::class)->execute($request->all());
 
@@ -99,6 +104,7 @@ class TimesheetController extends Controller
      */
     public function destroy(Timesheet $timesheet)
     {
+        $this->authorize('delete', $timesheet);
         $result = app(DeleteTimesheet::class)->execute(['id' => $timesheet->id]);
 
         if ($result !== true) {
@@ -114,6 +120,7 @@ class TimesheetController extends Controller
      */
     public function approve(Timesheet $timesheet)
     {
+        $this->authorize('approve', $timesheet);
         $result = app(ApproveTimesheet::class)->execute(['id' => $timesheet->id]);
 
         if ($result !== true) {
