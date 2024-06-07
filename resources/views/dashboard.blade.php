@@ -1,7 +1,33 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Timesheets') }}
+            @if ($object === 'timesheet')
+                @switch($mode)
+                    @case('create')
+                        {{ __('Create Timesheet') }}
+                    @break
+
+                    @case('edit')
+                        {{ __('View Timesheet') }}
+                    @break
+
+                    @default
+                        {{ __('Timesheets') }}
+                @endswitch
+            @elseif ($object === 'user')
+                @switch($mode)
+                    @case('create')
+                        {{ __('Create Timesheet') }}
+                    @break
+
+                    @case('edit')
+                        {{ __('View User') }}
+                    @break
+
+                    @default
+                        {{ __('Users') }}
+                @endswitch
+            @endif
         </h2>
     </x-slot>
 
@@ -14,7 +40,6 @@
                     @break
 
                     @case('edit')
-                    @case('view')
                         <x-timesheet.timesheet-view :mode='$mode' :timesheet="$timesheet" />
                     @break
 
@@ -28,7 +53,6 @@
                     @break
 
                     @case('edit')
-                    @case('view')
                         <x-user.user-view :mode='$mode' :user="$user" />
                     @break
 

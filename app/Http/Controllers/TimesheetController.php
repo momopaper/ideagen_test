@@ -26,16 +26,16 @@ class TimesheetController extends Controller
         if ($request->user()->hasRole('admin')) {
             $users = User::get();
             if ($request->get('user', null)) {
-                $timesheets = Timesheet::whereHas('user', function ($query) {
+                $timesheets = Timesheet::with('user')->whereHas('user', function ($query) {
                     $query->whereNull('deleted_at');
                 })->where('user_id', $request->get('user'))->get();
             } else {
-                $timesheets = Timesheet::whereHas('user', function ($query) {
+                $timesheets = Timesheet::with('user')->whereHas('user', function ($query) {
                     $query->whereNull('deleted_at');
                 })->get();
             }
         } else {
-            $timesheets = Timesheet::whereHas('user', function ($query) {
+            $timesheets = Timesheet::with('user')->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
             })->where('user_id', $request->user()->id)->get();
         }
@@ -48,7 +48,7 @@ class TimesheetController extends Controller
      */
     public function create()
     {
-        return view('dashboard', ['object' => 'timesheet', 'mode' => "create"]);
+        return view('dashboard', ['object' => 'timesheet', 'mode' => 'create']);
     }
 
     /**
@@ -74,11 +74,7 @@ class TimesheetController extends Controller
     public function edit(Request $request, Timesheet $timesheet)
     {
         $this->authorize('edit', $timesheet);
-        if ($request->user()->id == $timesheet->user->id) {
-            return view('dashboard', ['object' => 'timesheet', 'mode' => "edit", 'timesheet' => $timesheet]);
-        } else {
-            return view('dashboard', ['object' => 'timesheet', 'mode' => "view", 'timesheet' => $timesheet]);
-        }
+        return view('dashboard', ['object' => 'timesheet', 'mode' => 'edit', 'timesheet' => $timesheet]);
     }
 
     /**

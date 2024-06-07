@@ -27,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('dashboard', ['object' => 'user', 'mode' => "create"]);
+        return view('dashboard', ['object' => 'user', 'mode' => 'create']);
     }
 
     /**
@@ -65,7 +65,7 @@ class UserController extends Controller
      */
     public function edit(Request $request, User $user)
     {
-        return view('dashboard', ['object' => 'user', 'mode' => "edit", 'user' => $user]);
+        return view('dashboard', ['object' => 'user', 'mode' => 'edit', 'user' => $user]);
     }
 
     /**

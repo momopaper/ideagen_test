@@ -83,6 +83,7 @@ class TimesheetSubmissionTest extends TestCase
 
         $response->assertStatus(302);
         $this->assertEquals('update task information', $timesheet->fresh()->task_information);
+        $this->assertEquals(false, $timesheet->fresh()->is_approved);
         $response->assertRedirect('/timesheet');
     }
 
