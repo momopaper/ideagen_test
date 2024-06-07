@@ -1,0 +1,69 @@
+services:
+    #PHP
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: ideagen_test
+        container_name: app
+        restart: unless-stopped
+        tty: true
+        working_dir: /var/www/ideagen
+        volume:
+            - app-data:/var/www/ideagen
+        networks:
+            - app-network
+        secrets:
+            - db_database
+            - db_password
+
+    #Nginx
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - app-data:/var/www/ideagen
+            - ./nginx/:/etc/nginx/conf.d/
+        networks:
+            - app-network
+
+    #MySQL
+    db:
+        image: mysql:5.7.22
+        container_name: db
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3307:3306" #use 3307 to prevent crash port with default mysql port in local device
+        environment:
+            MYSQL_DATABASE_FILE: /run/secrets/db_database
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password
+        volumes:
+            - test_mount:/var/lib/mysql/
+        networks:
+            - app-network
+        secrets:
+            - db_database
+            - db_password
+
+#Networks
+networks:
+    app-network:
+        driver: bridge
+#Volumes
+volumes:
+    test_mount:
+        driver: local
+    app-data:
+        driver: local
+
+secrets:
+    db_database:
+        file: ./secrets/db_database.txt
+    db_password:
+        file: ./secrets/db_password.txt
