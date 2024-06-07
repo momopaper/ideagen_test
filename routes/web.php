@@ -16,6 +16,7 @@ Route::get('/', function () {
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
+Route::post('register', [UserController::class, 'register']);
 
 Route::middleware([
     // 'auth:sanctum',
@@ -52,12 +53,12 @@ Route::middleware([
  * Custom livewire update route
  */
 Livewire::setUpdateRoute(function ($handle) {
-    return Route::post(env('LIVEWIRE_UPDATE_PATH'), $handle);
+    return Route::post(config('livewire.livewire_update_url'), $handle);
 });
 
 /**
  * Custom livewire.js route
  */
 Livewire::setScriptRoute(function ($handle) {
-    return Route::get(env('LIVEWIRE_JAVASCRIPT_PATH'), $handle);
+    return Route::get(config('livewire.livewire_javascript_url'), $handle);
 });

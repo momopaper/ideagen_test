@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\User\CreateUser;
 use App\Services\User\DeleteUser;
+use App\Services\User\RegisterUser;
 use App\Services\User\UpdateUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -33,7 +35,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->request->set('user_id', $request->user()->id);
         $result = app(CreateUser::class)->execute($request->all());
 
         if (!$result instanceof User) {
@@ -43,6 +44,20 @@ class UserController extends Controller
         }
 
         return redirect()->route('user.index');
+    }
+
+    public function register(Request $request)
+    {
+        $result = app(RegisterUser::class)->execute($request->all());
+
+        if (!$result instanceof User) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($result);
+        }
+        Auth::login($result);
+
+        return redirect()->route('timesheet.index');
     }
 
     /**
