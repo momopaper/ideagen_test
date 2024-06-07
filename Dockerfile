@@ -60,7 +60,7 @@ USER www
 #COPY composer.json composer.lock /var/www
 
 # Copy env file from example
-COPY .env.example .env
+COPY .env.production .env
 
 # Run Composer
 RUN composer install

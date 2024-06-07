@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\AdminAccess;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'admin.access' => \App\Http\Middleware\AdminAccess::class,
+            'admin.access' => \App\Http\Middleware\AdminAccessMiddleware::class,
+        ]);
+        $middleware->use([
+            \App\Http\Middleware\CORSMiddleware::class,
+            \App\Http\Middleware\SecurityHeaderMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

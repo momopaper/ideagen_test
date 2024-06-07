@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class AdminAccess
+class AdminAccessMiddleware
 {
     /**
      * Handle an incoming request.
