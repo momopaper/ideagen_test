@@ -28,16 +28,16 @@ class TimesheetController extends Controller
             if ($request->get('user', null)) {
                 $timesheets = Timesheet::with('user')->whereHas('user', function ($query) {
                     $query->whereNull('deleted_at');
-                })->where('user_id', $request->get('user'))->get();
+                })->where('user_id', $request->get('user'))->orderBy('date', 'DESC')->orderBy('time_in', 'ASC')->get();
             } else {
                 $timesheets = Timesheet::with('user')->whereHas('user', function ($query) {
                     $query->whereNull('deleted_at');
-                })->get();
+                })->orderBy('date', 'DESC')->orderBy('time_in', 'ASC')->get();
             }
         } else {
             $timesheets = Timesheet::with('user')->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
-            })->where('user_id', $request->user()->id)->get();
+            })->where('user_id', $request->user()->id)->orderBy('date', 'DESC')->orderBy('time_in', 'ASC')->get();
         }
 
         return view('dashboard', ['object' => 'timesheet', 'mode' => 'list', 'timesheets' => $timesheets, 'users' => $users]);

@@ -6,8 +6,8 @@
 @endpush
 
 <div
-    class="mx-auto bg-white overflow-hidden shadow-xl sm:rounded-lg {{ Auth()->user()->hasRole('admin') ? 'flex' : 'w-1/3' }}">
-    <div class="border-gray-300 {{ Auth()->user()->hasRole('admin') ? 'w-1/2 border-r pr-6' : '' }}">
+    class="mx-auto bg-white overflow-hidden shadow-xl sm:rounded-lg {{ Auth()->user()->hasRole('admin') && $mode == 'edit' ? 'flex' : 'w-1/3' }}">
+    <div class="border-gray-300 {{ Auth()->user()->hasRole('admin') && $mode == 'edit' ? 'w-1/2 border-r pr-6' : '' }}">
         <form id="form_submission"
             action="{{ $mode === 'create' ? route('timesheet.store') : route('timesheet.update', $timesheet) }}"
             method="POST" enctype="multipart/form-data" class="p-6">
