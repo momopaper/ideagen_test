@@ -21,10 +21,10 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 
 Route::middleware([
-    'auth:sanctum',
+    //'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    //'auth',
+    'auth',
     // 'auth.session'
 ])->group(function () {
     Route::name('timesheet.')->group(function () {
