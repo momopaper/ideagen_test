@@ -34,8 +34,9 @@ class TimesheetSubmissionTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/timesheet');
+        $response->assertStatus(200);
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
+        $this->assertDatabaseHas('timesheets', ['id' => json_decode($response->getContent(), true)['result']['id']]);
     }
 
     public function test_can_view_timesheet(): void
@@ -81,10 +82,10 @@ class TimesheetSubmissionTest extends TestCase
             'task_information' => 'update task information',
         ]);
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $this->assertEquals('update task information', $timesheet->fresh()->task_information);
         $this->assertEquals(false, $timesheet->fresh()->is_approved);
-        $response->assertRedirect('/timesheet');
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
     }
 
     public function test_diff_user_cant_update_timesheet(): void
@@ -133,8 +134,9 @@ class TimesheetSubmissionTest extends TestCase
             'id' => $timesheet->id,
         ]);
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/timesheet');
+        $response->assertStatus(200);
+        $this->assertSoftDeleted('timesheets', ['id' => $timesheet->id]);
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
     }
 
     public function test_diff_user_cant_delete_timesheet(): void
@@ -180,9 +182,9 @@ class TimesheetSubmissionTest extends TestCase
             'id' => $timesheet->id,
         ]);
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $this->assertEquals(true, $timesheet->fresh()->is_approved);
-        $response->assertRedirect('/timesheet');
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
     }
 
     public function test_user_cant_approve_timesheet(): void

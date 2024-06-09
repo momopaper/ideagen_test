@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\TimesheetController as ApiTimesheetController;
+use App\Http\Controllers\Api\UserController as ApiUserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
@@ -19,30 +21,38 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 
 Route::middleware([
-    // 'auth:sanctum',
+    'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    'auth',
+    //'auth',
     // 'auth.session'
 ])->group(function () {
     Route::name('timesheet.')->group(function () {
         Route::get('/timesheet', [TimesheetController::class, 'index'])->name('index');
         Route::get('/timesheet/create', [TimesheetController::class, 'create'])->name('create');
-        Route::post('/timesheet/store', [TimesheetController::class, 'store'])->name('store');
         Route::get('/timesheet/{timesheet}', [TimesheetController::class, 'edit'])->name('edit');
-        Route::post('/timesheet/{timesheet}/update', [TimesheetController::class, 'update'])->name('update');
-        Route::post('/timesheet/{timesheet}/remove', [TimesheetController::class, 'destroy'])->name('destroy');
-        Route::post('/timesheet/{timesheet}/approve', [TimesheetController::class, 'approve'])->name('approve');
+        Route::post('/timesheet/store', [ApiTimesheetController::class, 'store'])->name('store');
+        Route::post('/timesheet/{timesheet}/update', [ApiTimesheetController::class, 'update'])->name('update');
+        Route::post('/timesheet/{timesheet}/remove', [ApiTimesheetController::class, 'destroy'])->name('destroy');
+        Route::post('/timesheet/{timesheet}/approve', [ApiTimesheetController::class, 'approve'])->name('approve');
+    });
+
+    //session token api call
+    Route::name('timesheet.')->group(function () {
     });
 
     Route::middleware(['admin.access'])->group(function () {
         Route::name('user.')->group(function () {
             Route::get('/user', [UserController::class, 'index'])->name('index');
             Route::get('/user/create', [UserController::class, 'create'])->name('create');
-            Route::post('/user/store', [UserController::class, 'store'])->name('store');
             Route::get('/user/{user}', [UserController::class, 'edit'])->name('edit');
-            Route::post('/user/{user}/update', [UserController::class, 'update'])->name('update');
-            Route::post('/user/{user}/remove', [UserController::class, 'destroy'])->name('destroy');
+            Route::post('/user/store', [ApiUserController::class, 'store'])->name('store');
+            Route::post('/user/{user}/update', [ApiUserController::class, 'update'])->name('update');
+            Route::post('/user/{user}/remove', [ApiUserController::class, 'destroy'])->name('destroy');
+        });
+
+        //session token api call
+        Route::name('user.')->group(function () {
         });
     });
 
