@@ -36,11 +36,12 @@
             </x-dropdown>
         </div>
     </div>
-    <button onclick="openModal('{{ $object }}')"
-        class="inline-flex items-center mb-4 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">Add
-        Timesheet
-    </button>
 @endhasrole
+
+<button onclick="openModal('{{ $object }}')"
+    class="inline-flex items-center mb-4 px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">Add
+    Timesheet
+</button>
 
 <div class="bg-white
         overflow-hidden shadow-xl sm:rounded-lg">
