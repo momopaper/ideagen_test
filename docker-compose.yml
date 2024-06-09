@@ -9,7 +9,7 @@ services:
         restart: unless-stopped
         tty: true
         working_dir: /var/www/ideagen
-        volume:
+        volumes:
             - app-data:/var/www/ideagen
         networks:
             - app-network
