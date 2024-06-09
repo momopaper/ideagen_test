@@ -49,8 +49,9 @@ class UserTest extends TestCase
             'role' => 'user'
         ]);
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/user');
+        $response->assertStatus(200);
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
+        $this->assertDatabaseHas('users', ['id' => json_decode($response->getContent(), true)['result']['id']]);
     }
 
     public function test_user_cant_add_user(): void
@@ -149,9 +150,9 @@ class UserTest extends TestCase
             'employee_no' => 'UpdatedEMPLOYEE123',
         ]);
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $this->assertEquals('Updated Test User', $_user->fresh()->name);
-        $response->assertRedirect('/user');
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
     }
 
     public function test_user_cant_update_user(): void
@@ -209,8 +210,9 @@ class UserTest extends TestCase
             'id' => $_user->id,
         ]);
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/user');
+        $response->assertStatus(200);
+        $this->assertSoftDeleted('users', ['id' => $_user->id]);
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
     }
 
     public function test_user_cant_delete_user(): void

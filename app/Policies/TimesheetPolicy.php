@@ -21,7 +21,7 @@ class TimesheetPolicy
      */
     public function update(User $user, Timesheet $timesheet): bool
     {
-        return ($user->id == $timesheet->user->id);
+        return $user->hasRole('admin') || ($user->id == $timesheet->user->id);
     }
 
     /**
@@ -29,7 +29,7 @@ class TimesheetPolicy
      */
     public function delete(User $user, Timesheet $timesheet): bool
     {
-        return ($user->id == $timesheet->user->id);
+        return $user->hasRole('admin') || ($user->id == $timesheet->user->id);
     }
 
     /**

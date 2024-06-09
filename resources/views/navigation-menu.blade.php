@@ -16,23 +16,10 @@
                         {{ __('Timesheets') }}
                     </x-nav-link>
                 </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('timesheet.create') }}" :active="request()->routeIs('timesheet.create')">
-                        {{ __('Create Timesheet') }}
-                    </x-nav-link>
-                </div>
-
                 @hasrole('admin')
-
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link href="{{ route('user.index') }}" :active="request()->routeIs('user.index')">
                             {{ __('Users') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <x-nav-link href="{{ route('user.create') }}" :active="request()->routeIs('user.create')">
-                            {{ __('Create User') }}
                         </x-nav-link>
                     </div>
                 @endrole
