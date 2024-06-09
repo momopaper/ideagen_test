@@ -328,7 +328,7 @@
                 let role = document.querySelector('input[name="role"]').value;
 
                 $.ajax({
-                    url: "{{ url('api/user/') }}/" + "store",
+                    url: "{{ url('user/') }}/" + "store",
                     type: "POST",
                     headers: {
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
