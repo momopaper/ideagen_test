@@ -60,16 +60,13 @@ USER www
 #COPY composer.json composer.lock /var/www
 
 # Copy env file from example
-COPY .env.production .env
+COPY .env.example .env
 
 # Run Composer
 RUN composer install
 
 # run npm install and build
 RUN npm install && npm run build
-
-#run key generate
-RUN php artisan key:generate
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
