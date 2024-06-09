@@ -37,10 +37,6 @@ Route::middleware([
         Route::post('/timesheet/{timesheet}/approve', [ApiTimesheetController::class, 'approve'])->name('approve');
     });
 
-    //session token api call
-    Route::name('timesheet.')->group(function () {
-    });
-
     Route::middleware(['admin.access'])->group(function () {
         Route::name('user.')->group(function () {
             Route::get('/user', [UserController::class, 'index'])->name('index');
@@ -49,10 +45,6 @@ Route::middleware([
             Route::post('/user/store', [ApiUserController::class, 'store'])->name('store');
             Route::post('/user/{user}/update', [ApiUserController::class, 'update'])->name('update');
             Route::post('/user/{user}/remove', [ApiUserController::class, 'destroy'])->name('destroy');
-        });
-
-        //session token api call
-        Route::name('user.')->group(function () {
         });
     });
 
