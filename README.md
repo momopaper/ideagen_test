@@ -191,6 +191,17 @@ You may need to assess or research the tools are compatible with current stack.
 
 \*_Due to the nature of this assessment test, many Jetstream features and settings are disabled. The main purpose of Jetstream here is its UI layout._
 
+## Version Control
+
+-   Branching Model: Follow Git Flow.
+    -   `main`: Production-ready code.
+    -   `develop`: Latest development changes.
+    -   `feature/xyz`: Feature-specific branches.
+    -   `bugfix/xyz`: Bug fix-specific branches.
+-   Commit Messages: Follow Conventional Commits. Structure: <type>(<scope>): <description>.
+    -   Example: - add login functionality
+-   Pull Requests: Create a pull request before merging. A code review by the repository owner is required.
+
 ## Coding style
 
 -   Follow DRY (Do not repeat yourself) and KISS (Keep it simple and stupid) principles.
