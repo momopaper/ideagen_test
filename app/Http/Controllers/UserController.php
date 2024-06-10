@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\User\RegisterUser;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,7 +35,7 @@ class UserController extends Controller
     {
         $result = app(RegisterUser::class)->execute($request->all());
 
-        if (!$result instanceof User) {
+        if ($result instanceof Validator) {
             return redirect()->back()
                 ->withInput()
                 ->withErrors($result);

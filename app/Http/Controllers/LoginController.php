@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Authentication\LoginUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Contracts\Auth\StatefulGuard;
 
 class LoginController extends Controller
 {
@@ -28,16 +26,15 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $result = app(LoginUser::class)->execute($request->all());
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+        if ($result instanceof Validator) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($result);
         }
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        if ($result == true) {
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
@@ -56,6 +53,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('login');
     }
 }

@@ -14,7 +14,7 @@ class UpdateUserTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * A basic unit test example.
+     * Update User test.
      */
     public function test_update_user(): void
     {

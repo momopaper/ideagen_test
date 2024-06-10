@@ -2,22 +2,16 @@
 
 namespace Tests\Unit;
 
-use App\Models\User;
+use App\Services\Authentication\LoginUser;
 use App\Services\User\CreateUser;
-use App\Services\User\DeleteUser;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-
-class DeleteUserTest extends TestCase
+class LoginTest extends TestCase
 {
-    use DatabaseTransactions;
-
     /**
-     * Delete User test.
+     * Login test.
      */
-    public function test_delete_user(): void
+    public function test_login(): void
     {
         $data = [
             'name' => 'Test User',
@@ -31,11 +25,10 @@ class DeleteUserTest extends TestCase
         ];
         $user = app(CreateUser::class)->execute($data);
 
-        $data = [
-            'id' => $user->id,
-        ];
-        $response = app(DeleteUser::class)->execute($data);
+        $response = app(LoginUser::class)->execute([
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
         $this->assertEquals(true, $response);
-        $this->assertSoftDeleted('users', ['id' => $user->id]);
     }
 }

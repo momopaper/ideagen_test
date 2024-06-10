@@ -9,6 +9,7 @@ use App\Services\User\CreateUser;
 use App\Services\User\DeleteUser;
 use App\Services\User\RegisterUser;
 use App\Services\User\UpdateUser;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,7 +22,7 @@ class UserController extends Controller
     {
         $result = app(CreateUser::class)->execute($request->all());
 
-        if (!$result instanceof User) {
+        if ($result instanceof Validator) {
             return response()->json([
                 'success' => false,
                 'errors' => $result->errors()
@@ -39,7 +40,7 @@ class UserController extends Controller
         $request->request->set('id', $user->id);
         $result = app(UpdateUser::class)->execute($request->all());
 
-        if ($result !== true) {
+        if ($result instanceof Validator) {
             return response()->json([
                 'success' => false,
                 'errors' => $result->errors()
@@ -56,7 +57,7 @@ class UserController extends Controller
     {
         $result = app(DeleteUser::class)->execute(['id' => $user->id]);
 
-        if ($result !== true) {
+        if ($result instanceof Validator) {
             return response()->json([
                 'success' => false,
                 'errors' => $result->errors()

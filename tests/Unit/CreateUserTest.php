@@ -13,7 +13,7 @@ class CreateUserTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * A basic unit test example.
+     * Create User test.
      */
     public function test_create_user(): void
     {

@@ -13,7 +13,7 @@ class RegisterUserTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * A basic unit test example.
+     * Register User test.
      */
     public function test_register_user(): void
     {
