@@ -10,12 +10,12 @@
 
 ## Installation
 
-You may choose to download or git pull the code base, then follow the installation instructions below to run the system.
+You may download or git pull the codebase, then follow the instructions below to run the system.
 
 -   Go to the project directory
--   You may want to edit `db_password.txt` and `db_database.txt` inside **secrets** folder, these 2 files will generate default root password and database.
--   You may also need to change NGINX configuration in `default.conf` at **nginx folder**
--   After done edit config files, do execute the commands below:
+-   Edit `db_password.txt` and `db_database.txt` inside the secrets folder to set the default root password and database.
+-   Update the NGINX configuration in `default.conf` inside the **nginx** folder if needed.
+-   After editing the config files, execute the following commands:
 
 ```bash
   docker compose build
@@ -23,8 +23,8 @@ You may choose to download or git pull the code base, then follow the installati
   docker compose run -d
 ```
 
--   The commands above will build and run containers as well as setup all the basics file in order to run the program.
--   You may want to wait for MySQL container setup for a while, then proceed the commands below at same project directory:
+-   These commands will build and run the containers, setting up all necessary files to run the program.
+-   Wait for the MySQL container to set up, then execute the following commands in the project directory:
 
 ```bash
   docker exec app php artisan key:generate
@@ -34,7 +34,7 @@ You may choose to download or git pull the code base, then follow the installati
   docker exec app php artisan db:seed
 ```
 
--   These commands will generate key, setup database and insert an default admin account. Default admin account login are as below:
+-   These commands will generate a key, set up the database, and insert a default admin account with the following credentials:
 
 ```bash
   admin@admin.com
@@ -48,47 +48,47 @@ You may choose to download or git pull the code base, then follow the installati
 ![Login](docs/images/login.png)
 ![Registration](docs/images/registration.png)
 
-You will be redirected to login screen if you are unauthenticated. You may sign-up from the button to register as new user, the registration here will create **normal user account**.
+You will be redirected to the login screen if you are unauthenticated. You can sign up to register as a new user, creating a **normal user account**.
 
 ### Timesheet Submission
 
 ![Timesheet view](docs/images/add_timesheet.png)
 
-After logged in, you will come to Timesheet screen, user can submit their timesheet by clicking the Add Timesheet button. Newly submitted timesheet will be in **Pending** status until admin approved the submission.
+After logging in, you will see the Timesheet screen. Users can submit their timesheets by clicking the Add Timesheet button. Newly submitted timesheets will be in **Pending** status until approved by an admin.
 
 ![Update Timesheet view](docs/images/update_timesheet.png)
 
-User can update their submitted timesheet in case they submit wrong details by clicking **view** button. Updated timesheet will changed status back to **Pending** for admin to review and approve again.
+Users can update their submitted timesheets if they made a mistake by clicking the **view** button. Updated timesheets will revert to **Pending** status for admin review and approval.
 
 ### Profile Update
 
 ![Update Profile view](docs/images/update_profile.png)
 ![Update Profile view](docs/images/update_profile_2.png)
 
-User can update their profile information by clicking the option from the dropdown as well as change password and logged out from other browser.
+Users can update their profile information, change their password, and log out from other browsers using the dropdown options.
 
 ### Admin Timesheet
 
 ![Update Profile view](docs/images/admin_timesheet_view.png)
 
-Admin user can _filter timesheet record by user_ as well as submit their own timesheet like normal user do.
+Admin users can _filter timesheet records by user_ and submit their own timesheets like normal users.
 
 ### Timesheet Approval
 
 ![Update Profile view](docs/images/admin_timesheet_view_2.png)
 ![Update Profile view](docs/images/after_approved.png)
 
-Admin can update and delete any timesheet as well as approve the submission by clicking the **view** button. After approved, the status will display as **Approved** together with checkmark icon.
+Admins can update, delete, and approve any timesheet by clicking the **view** button. Approved timesheets will display as **Approved** with a checkmark icon.
 
 ### User Management
 
 ![Update Profile view](docs/images/admin_add_user.png)
 
-Admin user can view User list from navigation menu above and create new user or admin account by clicking **Add User** button.
+Admin users can view the User list from the navigation menu and create new user or admin accounts by clicking the **Add User** button.
 
 ![Update Profile view](docs/images/admin_update_user_profile.png)
 
-Admin also can update and delete any user accounts.
+Admins can also update and delete user accounts.
 
 # Codebase Structure
 
@@ -142,7 +142,7 @@ Admin also can update and delete any user accounts.
 
 ## Identify functions
 
-Based on requirements, identify all features that required to implement:
+Based on requirements, identify all features that need to be implemented:
 
 -   User Authentication
     -   Register
@@ -167,7 +167,7 @@ Based on requirements, identify all features that required to implement:
 
 ## Security Concern
 
-Security must be concerned to ensure any details are not leaked or being accessed easily.
+Security measures to ensure data protection:
 
 -   Prevent SQL Injection
 -   Prevent XSS
@@ -176,7 +176,7 @@ Security must be concerned to ensure any details are not leaked or being accesse
 
 ## Containerisation
 
-Portable and easy deployment by using Docker, Docker-compose also will be used to manage multiple containers.
+Portable and easy deployment using Docker. Docker-compose will manage multiple containers.
 
 ## Deciding the Tools and Tech Stack
 
@@ -189,22 +189,22 @@ Current in-used tech stacks:
 
 You may need to assess or research the tools are compatible with current stack.
 
-\*_due to it is an assessment test, so I disabled a lot but not all of Jetstream features and settings and develop with original way of Laravel framework. Main purpose of Jetstream is their UI layout._
+\*_Due to the nature of this assessment test, many Jetstream features and settings are disabled. The main purpose of Jetstream here is its UI layout._
 
 ## Coding style
 
--   All code must follow practices of DRY (Do not repeat yourself) and KISS (Keep it simple and stupid).
--   Try your best to follow SOLID principles.
--   Leave comment on every function.
+-   Follow DRY (Do not repeat yourself) and KISS (Keep it simple and stupid) principles.
+-   Adhere to SOLID principles.
+-   Comment every function.
 
 ## Controller and Service class
 
 **Controller**:
 
--   Controller class will clasified as API or View controller.
--   API controller will return JSON response.
--   View controller will return view response.
--   Controller will execute event call with Service class function.
+-   Controllers are classified as API or View controllers.
+-   API controllers return JSON responses.
+-   View controllers return view responses.
+-   Controllers execute events via Service class functions.
 
 Controller class sample:
 
@@ -226,9 +226,9 @@ class TimesheetController extends Controller
 
 **Service**:
 
--   Each service class only execute 1 action.
--   Every service class may need to validate input with rules, depend on requirement.
--   Executing service class may return `Validator` result if there are validation errors exists.
+-   Each service class performs one action.
+-   Service classes validate input based on requirements.
+-   Service class execution may return Validator results if validation errors exist.
 
 Service class sample:
 
@@ -280,11 +280,9 @@ class CreateTimesheet extends BaseService
 
 ## Policy
 
-Policy is recommended to implement to check authenticated user is authorized for action.
+Implement policies to ensure authenticated users are authorized for actionss.
 
-Implement policy class:
-
--   code policy class
+Policy class implementation:
 
 ```bash
 class TimesheetPolicy
@@ -303,7 +301,7 @@ class TimesheetPolicy
 
 ```
 
--   Register policy class in `AuthServiceProvider.php`
+Register policy class in `AuthServiceProvider.php`.
 
 ```bash
     protected $policies = [
@@ -311,7 +309,7 @@ class TimesheetPolicy
     ];
 ```
 
--   call `authorize()` in controller, it will return 403 error code if not allowed to proceed.
+Call authorize() in the controller. It will return a 403 error code if not allowed to proceed.
 
 ```bash
     /**
@@ -341,7 +339,7 @@ class Timesheet extends Model
 
 ## Testing
 
--   Unit test is required for all service class, example as below.
+-   Unit tests are required for all service classes. See the example below.
 
 ```bash
 use Tests\TestCase;
@@ -373,7 +371,7 @@ class CreateUserTest extends TestCase
 
 ```
 
--   Feature test is required to check user behavioral or event action, example as below.
+-   Feature tests are required to check user behavior or event actions. See the example below.
 
 ```bash
 use Tests\TestCase;
