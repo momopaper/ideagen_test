@@ -106,22 +106,7 @@
             <button type="button" onclick="updateUser({{ $user->id }})"
                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update</button>
             <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                onclick="confirmDelete('{{ $object }}', {{ $user->id }})">Delete</button>
+                onclick="confirmDelete({{ $user->id }})">Delete</button>
         @endif
     </div>
 </div>
-
-<script>
-    function confirmDelete(event) {
-        event.preventDefault();
-        if (confirm('Are you sure you want to delete this user?')) {
-            document.getElementById('delete_form').submit();
-        }
-    }
-
-    function setRole(role) {
-        event.preventDefault();
-        document.getElementById('role').value = role;
-        document.getElementById('role-text').innerText = role.charAt(0).toUpperCase() + role.slice(1);
-    }
-</script>

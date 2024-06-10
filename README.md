@@ -137,3 +137,293 @@ Admin also can update and delete any user accounts.
 | `tests/Feature`      | Contains feature tests.             |
 | `tests/Unit`         | Contains unit tests.                |
 | `tests/TestCase.php` | Base test case class for all tests. |
+
+# Development Guideline
+
+## Identify functions
+
+Based on requirements, identify all features that required to implement:
+
+-   User Authentication
+    -   Register
+    -   Update profile
+    -   Change password
+    -   Login
+    -   Logout
+-   Timesheet Submissions
+    -   View Timesheet
+    -   Add Timesheet
+    -   Update Timesheet
+    -   Delete Timesheet
+-   Role-based Access Control
+    -   Normal User
+        -   All functions above
+    -   Admin User
+        -   All functions above
+        -   Create User
+        -   Update User
+        -   Delete User
+        -   Approve Timesheet
+
+## Security Concern
+
+Security must be concerned to ensure any details are not leaked or being accessed easily.
+
+-   Prevent SQL Injection
+-   Prevent XSS
+-   Password Hashing
+-   Session authentication
+
+## Containerisation
+
+Portable and easy deployment by using Docker, Docker-compose also will be used to manage multiple containers.
+
+## Deciding the Tools and Tech Stack
+
+Current in-used tech stacks:
+
+-   Laravel 11
+-   Laravel Jetstream with Livewire \*
+-   MySQL
+-   JQuery
+
+You may need to assess or research the tools are compatible with current stack.
+
+\*_due to it is an assessment test, so I disabled a lot but not all of Jetstream features and settings and develop with original way of Laravel framework. Main purpose of Jetstream is their UI layout._
+
+## Coding style
+
+-   All code must follow practices of DRY (Do not repeat yourself) and KISS (Keep it simple and stupid).
+-   Try your best to follow SOLID principles.
+-   Leave comment on every function.
+
+## Controller and Service class
+
+**Controller**:
+
+-   Controller class will clasified as API or View controller.
+-   API controller will return JSON response.
+-   View controller will return view response.
+-   Controller will execute event call with Service class function.
+
+Controller class sample:
+
+```bash
+class TimesheetController extends Controller
+{
+    /**
+     * Show the form for creating a new timesheet.
+     */
+    public function create()
+    {
+        return view('components.timesheet.timesheet-view', ['object' => 'timesheet', 'mode' => 'create']);
+    }
+
+    ...
+}
+
+```
+
+**Service**:
+
+-   Each service class only execute 1 action.
+-   Every service class may need to validate input with rules, depend on requirement.
+-   Executing service class may return `Validator` result if there are validation errors exists.
+
+Service class sample:
+
+```bash
+class CreateTimesheet extends BaseService
+{
+
+    /**
+     * validation rules.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'date' => 'required|date|date_format:Y-m-d',
+            'time_in' => 'required|date_format:H:i:s',
+            ...
+        ];
+    }
+
+    /**
+     * Create a Timesheet.
+     *
+     * @param array $data
+     * @return mixed
+     */
+    public function execute(array $data)
+    {
+        try {
+            $validated_result = $this->validate($data);
+            if ($validated_result !== true) return $validated_result;
+
+            $timesheet = Timesheet::create([
+                'date' => $data['date'],
+                'time_in' => $data['time_in'],
+                ...
+            ]);
+
+            return $timesheet;
+        } catch (Exception $ex) {
+            $this->log('error', $ex->getMessage() . PHP_EOL . PHP_EOL . $ex->getTraceAsString());
+            return false;
+        }
+    }
+}
+
+```
+
+## Policy
+
+Policy is recommended to implement to check authenticated user is authorized for action.
+
+Implement policy class:
+
+-   code policy class
+
+```bash
+class TimesheetPolicy
+{
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function edit(User $user, Timesheet $timesheet): bool
+    {
+        return $user->hasRole('admin') || ($user->id == $timesheet->user->id);
+    }
+
+    ...
+}
+
+```
+
+-   Register policy class in `AuthServiceProvider.php`
+
+```bash
+    protected $policies = [
+        Timesheet::class => TimesheetPolicy::class,
+    ];
+```
+
+-   call `authorize()` in controller, it will return 403 error code if not allowed to proceed.
+
+```bash
+    /**
+     * Show the form for editing the timesheet.
+     */
+    public function edit(Request $request, Timesheet $timesheet)
+    {
+        $this->authorize('edit', $timesheet);
+        return view('components.timesheet.timesheet-view', ['object' => 'timesheet', 'mode' => 'edit', 'timesheet' => $timesheet]);
+    }
+```
+
+## Model
+
+All model classes are required to implement Soft Delete.
+
+```bash
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Timesheet extends Model
+{
+    use SoftDeletes;
+
+    ...
+
+```
+
+## Testing
+
+-   Unit test is required for all service class, example as below.
+
+```bash
+use Tests\TestCase;
+
+class CreateUserTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    /**
+     * Create User test.
+     */
+    public function test_create_user(): void
+    {
+        $data = [
+            'name' => 'Test User',
+            'email' => 'TestUser@test.com',
+            'password' => 'password',
+            'ic' => 'IC123',
+            'epf_no' => 'EPF123',
+            'socso_no' => 'SOCSO123',
+            'employee_no' => 'EMPLOYEE123',
+            'role' => 'user'
+        ];
+        $response = app(CreateUser::class)->execute($data);
+        $this->assertInstanceOf(User::class, $response);
+        $this->assertDatabaseHas('users', ['id' => $response->id]);
+    }
+}
+
+```
+
+-   Feature test is required to check user behavioral or event action, example as below.
+
+```bash
+use Tests\TestCase;
+
+class UserTest extends TestCase
+{
+    public function test_admin_can_view_user_list(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('admin');
+        $this->actingAs($user);
+
+        $response = $this->get('/user');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_user_cant_view_user_list(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('user');
+        $this->actingAs($user);
+
+        $response = $this->get('/user');
+
+        $response->assertStatus(401);
+    }
+
+    public function test_admin_can_add_user(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('admin');
+        $this->actingAs($user);
+
+        $response = $this->post('/user/store', [
+            'name' => 'Test User Name',
+            'email' => 'test@test.com',
+            'password' => 'password',
+            'ic' => '12345',
+            'epf_no' => 'EPFNO',
+            'socso_no' => 'SOCSONO',
+            'employee_no' => 'EMPLOYEENO',
+            'role' => 'user'
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertEquals(true, json_decode($response->getContent(), true)['success']);
+        $this->assertDatabaseHas('users', ['id' => json_decode($response->getContent(), true)['result']['id']]);
+    }
+
+    ...
+}
+```

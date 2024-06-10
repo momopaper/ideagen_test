@@ -23,13 +23,13 @@ class UserController extends Controller
         $result = app(CreateUser::class)->execute($request->all());
 
         if ($result instanceof Validator) {
-            return response()->json([
+            return $this->response([
                 'success' => false,
                 'errors' => $result->errors()
-            ], 422);
+            ], self::http_invalid_data);
         }
 
-        return response()->json(['success' => true, 'result' => new UserResource($result)]);
+        return $this->response(['success' => true, 'result' => new UserResource($result)]);
     }
 
     /**
@@ -41,13 +41,13 @@ class UserController extends Controller
         $result = app(UpdateUser::class)->execute($request->all());
 
         if ($result instanceof Validator) {
-            return response()->json([
+            return $this->response([
                 'success' => false,
                 'errors' => $result->errors()
-            ], 422);
+            ], self::http_invalid_data);
         }
 
-        return response()->json(['success' => true]);
+        return $this->response(['success' => true]);
     }
 
     /**
@@ -58,12 +58,12 @@ class UserController extends Controller
         $result = app(DeleteUser::class)->execute(['id' => $user->id]);
 
         if ($result instanceof Validator) {
-            return response()->json([
+            return $this->response([
                 'success' => false,
                 'errors' => $result->errors()
-            ], 422);
+            ], self::http_invalid_data);
         }
 
-        return response()->json(['success' => true]);
+        return $this->response(['success' => true]);
     }
 }

@@ -63,13 +63,9 @@
     }
 
     @if ($object == 'timesheet')
-        function confirmDelete(object, objectId) {
-            if (confirm("Are you sure you want to delete this " + object + "?")) {
-                if (object == "timesheet") {
-                    deleteTimesheet(objectId);
-                } else if (object == "user") {
-                    deleteUser(objectId);
-                }
+        function confirmDelete(objectId) {
+            if (confirm("Are you sure you want to delete this timesheet?")) {
+                deleteTimesheet(objectId);
             }
         }
 
@@ -251,6 +247,12 @@
             });
         }
     @else
+        function confirmDelete(objectId) {
+            if (confirm("Are you sure you want to delete this user?")) {
+                deleteUser(objectId);
+            }
+        }
+
         function checkUserInputsValidity() {
             event.preventDefault();
             let name_input = document.querySelector('input[name="name"]');

@@ -27,13 +27,13 @@ class TimesheetController extends Controller
         $result = app(CreateTimesheet::class)->execute($request->all());
 
         if (!$result instanceof Timesheet) {
-            return response()->json([
+            return $this->response([
                 'success' => false,
                 'errors' => $result->errors()
-            ], 422);
+            ], self::http_invalid_data);
         }
 
-        return response()->json(['success' => true, 'result' => new TimesheetResource($result)]);
+        return $this->response(['success' => true, 'result' => new TimesheetResource($result)]);
     }
 
     /**
@@ -46,13 +46,13 @@ class TimesheetController extends Controller
         $result = app(UpdateTimesheet::class)->execute($request->all());
 
         if ($result !== true) {
-            return response()->json([
+            return $this->response([
                 'success' => false,
                 'errors' => $result->errors()
-            ], 422);
+            ], self::http_invalid_data);
         }
 
-        return response()->json(['success' => true]);
+        return $this->response(['success' => true]);
     }
 
     /**
@@ -64,12 +64,12 @@ class TimesheetController extends Controller
         $result = app(DeleteTimesheet::class)->execute(['id' => $timesheet->id]);
 
         if ($result !== true) {
-            return response()->json([
+            return $this->response([
                 'success' => false,
                 'errors' => $result->errors()
-            ], 422);
+            ], self::http_invalid_data);
         }
-        return response()->json(['success' => true]);
+        return $this->response(['success' => true]);
     }
 
     /**
@@ -84,7 +84,7 @@ class TimesheetController extends Controller
             return response()->json([
                 'success' => false,
                 'errors' => $result->errors()
-            ], 422);
+            ], self::http_invalid_data);
         }
 
         return response()->json(['success' => true]);

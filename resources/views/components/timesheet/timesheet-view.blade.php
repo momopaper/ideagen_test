@@ -89,7 +89,7 @@
             @else
                 @if (Auth()->user()->hasRole('admin') || Auth::user()->id == $timesheet->user->id)
                     <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                        onclick="confirmDelete('{{ $object }}', {{ $timesheet->id }})">Delete</button>
+                        onclick="confirmDelete({{ $timesheet->id }})">Delete</button>
 
                     <button type="button" onclick="updateTimesheet({{ $timesheet->id }})"
                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update</button>
